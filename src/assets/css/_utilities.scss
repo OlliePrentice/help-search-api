@@ -1,0 +1,21 @@
+// Spacing
+.remove-last-margin {
+    > * {
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+// Gradients
+.gradient-heading {
+    @include gradient-text(sky-spectrum);
+}
+
+.border-bar {
+    display: block;
+    width: 100%;
+    height: 5px;
+
+    @include gradient-background(sky-spectrum, 'horizontal');
+}

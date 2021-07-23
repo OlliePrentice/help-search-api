@@ -1,0 +1,30 @@
+.search-result {
+
+    &__link {
+        display: block;
+        text-decoration: none;
+        padding: 20px 20px 25px;
+        overflow: hidden;
+        transition: 300ms;
+
+        @media only screen and (min-width: 768px) {
+            padding: 30px 30px 35px;
+        }
+
+        &:hover, &:focus {
+            text-decoration: none;
+            box-shadow: 0 2px 20px 0 rgb(0 0 0 / 15%);
+            transform: translateY(-5px);
+        }
+    }
+
+    &__heading, &__excerpt {
+        color: #4a4a4a;
+    }
+
+    .border-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+}

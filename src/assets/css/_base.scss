@@ -1,0 +1,40 @@
+html {
+    background-color: white;
+}
+
+.section-help {
+    padding-bottom: 100px;
+
+    &__top {
+        padding: 40px 0;
+        background: #f5f5f5;
+    }
+}
+
+.loader {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border-top: 4px solid color(offer);
+    border-right: 4px solid color(offer);
+    border-bottom: 4px solid transparent;
+    border-left: 4px solid transparent;
+    animation: spin 500ms infinite linear;
+    background: none;
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+}
