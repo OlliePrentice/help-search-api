@@ -1,25 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useHistory } from "react-router-dom";
+import usePrevious from "../utils/usePrevious";
 
 import "../assets/css/modules/_search-form.scss";
 
 function SearchForm({ handleResults }) {
+    let history = useHistory();
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
+    const prevProps = usePrevious({ history });
+    const form = useRef(null);
 
-    const handleSubmit = async (evt) => {
+    const handleSubmit = useCallback( async (evt, browserBack, prevSearch) => {
         evt.preventDefault();
+
+        let query = search;
+
+        if(browserBack) {
+            query = prevSearch;
+        }
+
         if(!loading) {
             setLoading(true);
 
             try {
-                const response = await (
-                    await fetch(
-                        `https://help-search-api-prod.herokuapp.com/search?query=${search}`
-                    )
-                ).json();
+                let response = { results: [] };
+                
+                if(query) {
+                    response = await (
+                        await fetch(
+                            `https://help-search-api-prod.herokuapp.com/search?query=${query}`
+                        )
+                    ).json();
+                }
 
                 setTimeout(() => {
-                    handleResults(response.results);
+                    if(!prevSearch) {
+                        history.push(`/?s=${query}`);
+                    }
+                    
+                    handleResults(response.results, query);
                     setLoading(false);
                 },1000);
           
@@ -29,13 +49,27 @@ function SearchForm({ handleResults }) {
             }
          
         }
-    };
+    }, [handleResults, history, loading, search]);
+
+    useEffect(() => {
+        return history.listen(() => {
+            if (history.action === "POP") {
+                const previousUrl = prevProps.history.location.search;
+                const prevSearch = new URLSearchParams(previousUrl).get("s") || '';
+
+                setSearch(prevSearch);
+                handleSubmit(new Event("submit"), true, prevSearch);
+
+            }
+        });
+    }, [history, prevProps, handleSubmit]);
+
 
     return (
         <div className={`search-form ${loading && 'search-form--loading'}`}>
             <span className="loader"></span>
             <div className="o-container">
-                <form onSubmit={handleSubmit}>
+                <form ref={form} onSubmit={handleSubmit}>
                     <div className="search-form__wrap u-width-4/5@medium u-width-3/5@x-large">
                         <label
                             htmlFor="searchInput"
@@ -46,9 +80,11 @@ function SearchForm({ handleResults }) {
                         <input
                             id="searchInput"
                             name="s"
+                            type="text"
                             className="c-form-input search-form__input"
                             placeholder="Enter search term"
                             onChange={(e) => setSearch(e.target.value)}
+                            value={search || ''}
                             disabled={loading}
                         />
                         <button

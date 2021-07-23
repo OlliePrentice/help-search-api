@@ -9,28 +9,40 @@ import Pagination from "../modules/Pagination";
 function Help() {
     let history = useHistory();
     const [results, setResults] = useState([]);
+    const [query, setQuery] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage] = useState(10);
-    const prevProps = usePrevious({history});
+    const prevProps = usePrevious({ history });
 
-    const handleResults = (data) => setResults(data);
+    const handleResults = (data, query) => {
+        setCurrentPage(1);
+        setResults(data);
+        setQuery(query);
+        
+    };
 
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = results.slice(indexOfFirstPost, indexOfLastPost);
+    const currentPosts = results
+        ? results.slice(indexOfFirstPost, indexOfLastPost)
+        : [];
 
     const paginate = (number) => {
         setCurrentPage(number);
-        history.push(`/page/${number}`);
+        history.push(`/page/${number}?s=${query}`);
     };
 
-   
     useEffect(() => {
-
         return history.listen(() => {
             if (history.action === "POP") {
                 const previousUrl = prevProps.history.location.pathname;
-                setCurrentPage(parseInt(previousUrl.substr(previousUrl.indexOf("page/")+5).match(/^\d*/)[0]) || 1);
+                setCurrentPage(
+                    parseInt(
+                        previousUrl
+                            .substr(previousUrl.indexOf("page/") + 5)
+                            .match(/^\d*/)[0]
+                    ) || 1
+                );
             }
         });
     }, [history, prevProps]);

@@ -10,8 +10,6 @@ function Pagination({ postsPerPage, totalPosts, paginate, currentPage }) {
 
     let isLastPage = (currentPage === pageNumbers.length);
 
-    console.log(currentPage);
-
     return (
         <div className="o-container">
             <nav className="pagination">
