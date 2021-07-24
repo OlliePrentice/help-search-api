@@ -4,6 +4,7 @@ import usePrevious from "../utils/usePrevious";
 
 import "../assets/css/modules/_search-form.scss";
 
+
 function SearchForm({ handleResults }) {
     let history = useHistory();
     const [loading, setLoading] = useState(false);
@@ -11,6 +12,9 @@ function SearchForm({ handleResults }) {
     const prevProps = usePrevious({ history });
     const form = useRef(null);
 
+    /**
+     * Handle the form submission
+     */
     const handleSubmit = useCallback( async (evt, browserBack, prevSearch) => {
         evt.preventDefault();
 
@@ -51,6 +55,9 @@ function SearchForm({ handleResults }) {
         }
     }, [handleResults, history, loading, search]);
 
+    /**
+     * Handle Browser back and forward
+     */
     useEffect(() => {
         return history.listen(() => {
             if (history.action === "POP") {

@@ -32,6 +32,9 @@ function Help() {
         history.push(`/page/${number}?s=${query}`);
     };
 
+    /**
+     * Handle Browser back and forwards of pagination
+     */
     useEffect(() => {
         return history.listen(() => {
             if (history.action === "POP") {
