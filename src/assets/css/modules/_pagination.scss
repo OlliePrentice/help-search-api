@@ -20,10 +20,11 @@
             display: inline-block;
         }
 
-        &:first-child + li:not(.active, .current),
-        &:nth-last-child(-n + 2):not(.active, .current) {
-            display: inline-block;
 
+        &:first-child + li:not(.current):not(.active),
+        &:nth-last-child(-n + 2):not(.active):not(.current) {
+            display: inline-block;
+            
             &:after {
                 content: "...";
             }
@@ -32,6 +33,7 @@
                 display: none;
             }
         }
+
 
         &:first-child.current + li + li {
             display: inline-block;
